@@ -61,7 +61,7 @@ export default function WebcamPage() {
       setIsStreaming(true);
       intervalRef.current = setInterval(() => {
         detectWebcamFeed();
-      }, 100);
+      }, 1000);
     }
   };
 
