@@ -1,5 +1,6 @@
 ## Demo 
 
+Recommedation system based on the discord version
 https://github.com/user-attachments/assets/d41742a1-3be6-4899-ab10-05caeb44a520
 <details>
   <summary>thinking blocks</summary>
