@@ -22,7 +22,7 @@ export default function Home() {
             //console.log("User Enter page 1");
           }}
         >
-          Start Webcam Workout
+          Start Workout Analysis
         </button>
 
         <button 

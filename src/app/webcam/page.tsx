@@ -61,7 +61,7 @@ export default function WebcamPage() {
       setIsStreaming(true);
       intervalRef.current = setInterval(() => {
         detectWebcamFeed();
-      }, 1000);
+      }, 500);
     }
   };
 
@@ -83,7 +83,7 @@ export default function WebcamPage() {
     <div className="min-h-screen bg-gray-900 flex flex-col justify-center items-center p-4">
       {/* Title */}
       <h1 className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 mb-6">
-        Webcam Workout
+        Workout Analysis
       </h1>
 
       {/* Webcam and Canvas */}
@@ -108,7 +108,7 @@ export default function WebcamPage() {
               : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700'
           } text-white`}
         >
-          {isStreaming ? "Stop Stream" : "Start Stream"}
+          {isStreaming ? "Stop" : "Start"}
         </button>
 
         <div className="flex justify-between gap-4">

@@ -15,7 +15,7 @@ export async function POST(request) {
 
     let exercises_prompt="Here is a list of the users' favorite exercises: "+exercises+". Use the list when user asks about exercise.";
     
-    const constrain= "You are a gym advisor chatbot. Ensure your responce in english. ";
+    const constrain= "You are a fitness advisor chatbot. Ensure your responce in english. ";
     
     let prompt= (context.length==0)?constrain+exercises_prompt:constrain+exercises_prompt+context_prompt;
 
@@ -23,7 +23,6 @@ export async function POST(request) {
       model: "deepseek-r1:7b-qwen-distill-q4_K_M",
       messages: [ 
                   { role: "system", content: prompt},
-                  
                   { role: "user", content: message }
 
                 ],
