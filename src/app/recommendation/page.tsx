@@ -9,6 +9,7 @@ const RecommendationPage = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [context, setContext] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +26,7 @@ const RecommendationPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: input, user: user }),
+        body: JSON.stringify({ message: input, user: user ,context: context}),
       });
 
       if (!response.ok) {
@@ -54,9 +55,10 @@ const RecommendationPage = () => {
             return [...prevMessages, { role: "assistant", content: accumulatedMessage }];
           }
         });
-      }
 
-      console.log(accumulatedMessage);
+      }
+      if(accumulatedMessage!=='\n') setContext((prevContext) => [...prevContext, accumulatedMessage.trim()]);
+      
     } catch (error) {
       console.error("Error:", error);
       const errorMessage = {
@@ -75,6 +77,7 @@ const RecommendationPage = () => {
 
   const handleRefresh = () => {
     window.location.reload();
+    setContext([]);
   };
 
   return (

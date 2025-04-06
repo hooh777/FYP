@@ -1,37 +1,31 @@
 "use server";
 import { Ollama } from "ollama";
-const user=Math.floor(Math.random() * 3864);
+import {get_best_3} from "./gen_best"
+
 
 export async function POST(request) {
-  const host = request.headers.get('host') || 'localhost:3000';
-  const protocol = host.includes('localhost') ? 'http' : 'https';
-  const baseUrl = `${protocol}://${host}`;
-  const ollama = new Ollama({ host: "http://172.20.16.1:11434/" });
- 
+  const ollama = new Ollama({ host: "http://172.20.16.1:11434/" }); 
   try {
-    const { message,user } = await request.json();
-    const best_3 = await fetch(`${baseUrl}/api/score_generator`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ inputData:user}),
-    });
-    if (!best_3.ok) {
-      throw new Error(`Failed to fetch score_generator: ${best_3.statusText}`);
-    }
-    const itemNames = await best_3.json();
-    var exercises=Object.values(itemNames);
-    console.log(`Best ${exercises.length} exercise for user ${user}:\n`+exercises)
-    exercises="Here is a list of the users' favorite exercises: "+exercises+". Use the list when the message is about exercise.";
-
-    const constrain= "You are a gym assistant. Respond to messages only related to the users' exercise or diet. Keep your responce in english.";
-    let content= constrain+message+exercises;
+    const { message,user,context=[]} = await request.json();
     
+
+    let context_prompt="Here are the previous responses you may refer to: "+context
+   
+    let exercises = await get_best_3(BigInt(user));
+
+    let exercises_prompt="Here is a list of the users' favorite exercises: "+exercises+". Use the list when user asks about exercise.";
+    
+    const constrain= "You are a gym advisor chatbot. Ensure your responce in english. ";
+    
+    let prompt= (context.length==0)?constrain+exercises_prompt:constrain+exercises_prompt+context_prompt;
+
     const stream = await ollama.chat({
       model: "deepseek-r1:7b-qwen-distill-q4_K_M",
       messages: [ 
-                  { role: "user", content: content }
+                  { role: "system", content: prompt},
+                  
+                  { role: "user", content: message }
+
                 ],
       stream: true,
     });
@@ -61,8 +55,9 @@ export async function POST(request) {
           } catch (error) {
             controller.error(error);
           } finally{
+            console.log(`Best ${exercises.length} exercise for user ${user}:\n`+exercises)
             console.log("Think block:" + think.replace("<think>",""));
-            console.log("Output:" + output);
+            //console.log("Output:" + output);
           }
         },
       }),

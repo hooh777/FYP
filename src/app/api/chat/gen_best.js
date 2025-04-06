@@ -30,7 +30,7 @@ function applySigmoidToArrayWithIndices(array) {
 }
 
 // Define the handler for the API route
-export async function POST(request) {
+export async function get_best_3(request) {
   try {
     const modelPath = path.join(process.cwd(), 'public','two_tower_ctncf_simp.onnx');
     const modelBuffer = await readFile(modelPath);
@@ -38,11 +38,10 @@ export async function POST(request) {
     // Create an InferenceSession with onnxruntime-web
     const session = await ort.InferenceSession.create(modelBuffer);
 
-    // Parse the request body (assuming the input data is sent as JSON)
-    const { inputData } = await request.json();
-    let inputData_big=BigInt(inputData);
+
+    
     // Prepare the input for the model (this depends on your model's expected input)
-    const input_user =  new ort.Tensor(new BigInt64Array(Array(labelMapping.length).fill(inputData_big)));
+    const input_user =  new ort.Tensor(new BigInt64Array(Array(labelMapping.length).fill(request)));
     const input_item =  new ort.Tensor(new BigInt64Array(Array(labelMapping.length).fill().map((_, i) => BigInt(i))));
     const feeds = { user_idx: input_user, item_idx: input_item };
 
@@ -71,22 +70,8 @@ export async function POST(request) {
 
     const itemNames = topLabels.map(item => item.label);
     
-    // Return the result as a JSON response
-    return new Response(
-      JSON.stringify(itemNames),
-      {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
+    return itemNames
   } catch (error) {
     console.error('Error during inference:', error);
-    return new Response(
-      JSON.stringify({ error: 'Failed to run inference' }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
   }
 }

@@ -6,7 +6,7 @@ export default function Home() {
   const router = useRouter()
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col justify-center items-center p-4">
+    <div className="min-h-screen bg-gray-900 flex flex-col justify-center items-center p-4 " >
       {/* Title */}
       <h1 className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 mb-10">
         AI Gym Coach
@@ -19,7 +19,7 @@ export default function Home() {
           type="button" 
           onClick={() => {
             router.push('/webcam');
-            console.log("User Enter page 1");
+            //console.log("User Enter page 1");
           }}
         >
           Start Webcam Workout
@@ -30,7 +30,7 @@ export default function Home() {
           type="button" 
           onClick={() => {
             router.push('/recommendation');
-            console.log("User Enter page 2");
+            //console.log("User Enter page 2");
           }}
         >
           Get Recommendations
